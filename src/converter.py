@@ -1,7 +1,7 @@
 from PIL import Image
 import numpy as np
 
-im = Image.open("C:\\Users\\rallen\\Downloads\\pixil-frame-0 (1).png")
+im = Image.open("C:\\Users\\rallen\\Downloads\\pixil-frame-0 (2).png")
 p = np.array(im)
 
 string = "extern char image[8][32][3] = {"

@@ -1,3 +1,5 @@
+
+#include <map>
 #include <FastLED.h>
 #include <images.h>
 
@@ -8,8 +10,6 @@
 
 #define BRIGHTNESS 16
 
-
-uint8_t test[3] = {0xFF, 0xAA, 0x55};
 // Helper functions for an two-dimensional XY matrix of pixels.
 // Simple 2-D demo code is included as well.
 //
@@ -117,6 +117,7 @@ uint16_t XY( uint8_t x, uint8_t y )
   return i;
 }
 
+// prints image to display
 void print_image(char image_array[kMatrixHeight][kMatrixWidth][3]){
   int x, y;
   int m = 0;
@@ -132,8 +133,7 @@ void print_image(char image_array[kMatrixHeight][kMatrixWidth][3]){
   delay(1);
 }
 
-
-
+//shifts 2d array in X and Y amounts
 void shift_2d_array(char (&image_array)[kMatrixHeight][kMatrixWidth][3], int shift_x = 0, int shift_y = 0){
   char temp_array[kMatrixHeight][kMatrixWidth][3];
   memcpy(&temp_array, &image_array, sizeof(temp_array));
@@ -163,8 +163,9 @@ void setup() {
 void loop()
 {
   print_image(bucket_2d);
-  delay(100);
-  shift_2d_array(bucket_2d, 0, 1);
+  delay(1000);
+  print_image(pacman);
+  delay(1000);
 }
 
 
