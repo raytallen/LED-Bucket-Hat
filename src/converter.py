@@ -1,12 +1,13 @@
 from PIL import Image
 import numpy as np
 
-im = Image.open("C:\\Users\\rallen\\Downloads\\download.bmp")
+im = Image.open("C:\\Users\\rallen\\Downloads\\pixil-frame-0 (1).png")
 p = np.array(im)
 
-string = "uint8_t image[256][3] = {"
+string = "extern char image[8][32][3] = {"
 
 for y in range(0, 8):
+    string += "{"
     for x in range(0, 32):
         string += "{"
         for rgb in range (0, 3):
@@ -14,8 +15,10 @@ for y in range(0, 8):
             string += ", "
         string = string[:-2]
         string += "}, "
+    string = string[:-2]
+    string += "},"
     string += "\n"
-string = string[:-3]
+string = string[:-2]
 string += "};"
 
 print(string)
