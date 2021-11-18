@@ -18,8 +18,8 @@ uint8_t test[3] = {0xFF, 0xAA, 0x55};
 //             No error checking is performed on the ranges of x and y.
 
 // Params for width and height
-const uint8_t kMatrixWidth = 8;
-const uint8_t kMatrixHeight = 32;
+const uint8_t kMatrixHeight = 8;
+const uint8_t kMatrixWidth = 32;
 
 // Param for different pixel layouts
 const bool    kMatrixSerpentineLayout = true;
@@ -89,9 +89,9 @@ uint16_t XY( uint8_t x, uint8_t y )
   
   if( kMatrixSerpentineLayout == false) {
     if (kMatrixVertical == false) {
-      i = (x * kMatrixWidth) + y;
+      i = (x * kMatrixHeight) + y;
     } else {
-      i = kMatrixHeight * (kMatrixWidth - (y+1))+x;
+      i = kMatrixWidth * (kMatrixHeight - (y+1))+x;
     }
   }
 
@@ -99,17 +99,17 @@ uint16_t XY( uint8_t x, uint8_t y )
     if (kMatrixVertical == false) {
       if( x & 0x01) {
         // Odd rows run backwards
-        uint8_t reverseX = (kMatrixWidth - 1) - y;
-        i = (x * kMatrixWidth) + reverseX;
+        uint8_t reverseX = (kMatrixHeight - 1) - y;
+        i = (x * kMatrixHeight) + reverseX;
       } else {
         // Even rows run forwards
-        i = (x * kMatrixWidth) + y;
+        i = (x * kMatrixHeight) + y;
       }
     } else { // vertical positioning
       if ( y & 0x01) {
-        i = kMatrixHeight * (kMatrixWidth - (y+1))+x;
+        i = kMatrixWidth * (kMatrixHeight - (y+1))+x;
       } else {
-        i = kMatrixHeight * (kMatrixWidth - y) - (x+1);
+        i = kMatrixWidth * (kMatrixHeight - y) - (x+1);
       }
     }
   }
@@ -117,11 +117,11 @@ uint16_t XY( uint8_t x, uint8_t y )
   return i;
 }
 
-void print_image(char image_array[kMatrixWidth][kMatrixHeight][3]){
+void print_image(char image_array[kMatrixHeight][kMatrixWidth][3]){
   int x, y;
   int m = 0;
-  for(y = 0; y < kMatrixWidth; y++){
-    for(x = 0; x < kMatrixHeight; x++){
+  for(y = 0; y < kMatrixHeight; y++){
+    for(x = 0; x < kMatrixWidth; x++){
       for(m = 0; m < 3; m++){
         leds[XY(x,y)][m] = image_array[y][x][m];
       }
@@ -132,16 +132,18 @@ void print_image(char image_array[kMatrixWidth][kMatrixHeight][3]){
   delay(1);
 }
 
-void shift_2d_array(char image_array[kMatrixWidth][kMatrixHeight][3], int shift_x, int shift_y){
+
+
+void shift_2d_array(char (&image_array)[kMatrixHeight][kMatrixWidth][3], int shift_x = 0, int shift_y = 0){
   char temp_array[kMatrixHeight][kMatrixWidth][3];
   memcpy(&temp_array, &image_array, sizeof(temp_array));
 
   int x,y,m;
 
-  for(y = 0; y < kMatrixWidth; y++){
-    for(x = 0; x < kMatrixHeight; x++){
+  for(y = 0; y < kMatrixHeight; y++){
+    for(x = 0; x < kMatrixWidth; x++){
       for(m = 0; m < 3; m++){
-        image_array[y][x][m] = temp_array[y][x][m];
+        image_array[y + shift_y][x + shift_x][m] = temp_array[y][x][m];
       }
     }
   }
@@ -161,9 +163,8 @@ void setup() {
 void loop()
 {
   print_image(bucket_2d);
-  delay(2000);
-  shift_2d_array(bucket_2d, 1, 1);
-  delay(1000);
+  delay(100);
+  shift_2d_array(bucket_2d, 0, 1);
 }
 
 
