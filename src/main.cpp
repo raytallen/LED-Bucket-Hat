@@ -132,7 +132,20 @@ void print_image(char image_array[kMatrixWidth][kMatrixHeight][3]){
   delay(1);
 }
 
-void shift_2d_array(char image_array[kMatrixWidth][kMatrixHeight][3]){
+void shift_2d_array(char image_array[kMatrixWidth][kMatrixHeight][3], int shift_x, int shift_y){
+  char temp_array[kMatrixHeight][kMatrixWidth][3];
+  memcpy(&temp_array, &image_array, sizeof(temp_array));
+
+  int x,y,m;
+
+  for(y = 0; y < kMatrixWidth; y++){
+    for(x = 0; x < kMatrixHeight; x++){
+      for(m = 0; m < 3; m++){
+        image_array[y][x][m] = temp_array[y][x][m];
+      }
+    }
+  }
+
 
 }
 
@@ -149,7 +162,8 @@ void loop()
 {
   print_image(bucket_2d);
   delay(2000);
-
+  shift_2d_array(bucket_2d, 1, 1);
+  delay(1000);
 }
 
 
