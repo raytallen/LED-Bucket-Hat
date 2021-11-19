@@ -121,6 +121,8 @@ uint16_t XY( uint8_t x, uint8_t y )
 void print_image(char image_array[kMatrixHeight][kMatrixWidth][3]){
   int x, y;
   int m = 0;
+  // memcpy(&leds, &image_array, 768);
+
   for(y = 0; y < kMatrixHeight; y++){
     for(x = 0; x < kMatrixWidth; x++){
       for(m = 0; m < 3; m++){
@@ -134,21 +136,46 @@ void print_image(char image_array[kMatrixHeight][kMatrixWidth][3]){
 }
 
 //shifts 2d array in X and Y amounts
-void shift_2d_array(char (&image_array)[kMatrixHeight][kMatrixWidth][3], int shift_x = 0, int shift_y = 0){
+void shift_2d_array(char (&image_array)[kMatrixHeight][kMatrixWidth][3], char direction){
   char temp_array[kMatrixHeight][kMatrixWidth][3];
   memcpy(&temp_array, &image_array, sizeof(temp_array));
 
   int x,y,m;
 
-  for(y = 0; y < kMatrixHeight; y++){
-    for(x = 0; x < kMatrixWidth; x++){
-      for(m = 0; m < 3; m++){
-        image_array[y + shift_y][x + shift_x][m] = temp_array[y][x][m];
+  switch(direction){
+    case 'r':{
+      for(y=0; y<kMatrixHeight; y++){
+        for(x=0; x<kMatrixWidth; x++){
+          break;
+        }
+      }
+    } 
+    default: break;
+  }
+}
+
+void rainbow_wave(int number_of_waves){
+  int x, y, m;
+  for(m = 0; m < kMatrixWidth*number_of_waves; m++){
+    for(y = 0; y < kMatrixHeight; y++){
+      for(x = 0; x < kMatrixWidth; x++){
+        leds[XY(x,y)] = CHSV((x - m)*8,255,255);
       }
     }
+    FastLED.show();
+    delay(10);
   }
+}
 
-
+void flash_random_colours(int number_of_colours, int delay_length){
+  int x;
+  for(x = 0; x < number_of_colours; x++){
+    int r = rand() % 256;
+    fill_solid(leds, 256, CHSV(r, 255, 255));
+    FastLED.show();
+    delay(delay_length);
+  }
+  
 }
 
 void setup() {
@@ -166,6 +193,10 @@ void loop()
   delay(1000);
   print_image(pacman);
   delay(1000);
+  rainbow_wave(2);
+  delay(1);
+  flash_random_colours(10, 200);
+  delay(1);
 }
 
 
